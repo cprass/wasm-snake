@@ -15,27 +15,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
 
-#include "SDL2/SDL.h"
+#ifndef WASM_SNAKE_INPUT_H
+#define WASM_SNAKE_INPUT_H
+
+#include <SDL2/SDL.h>
 
 namespace snake {
 
-    class Graphics {
+    class Input {
     public:
-        Graphics();
-        ~Graphics();
-
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
+        void beingNewFrame();
+        void keyDownEvent(const SDL_Event& event);
+        SDL_Scancode getPressedKey();
     private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
+        SDL_Scancode _pressedKey;
     };
 
 } // snake
 
-#endif //WASM_SNAKE_GRAPHICS_H
+#endif //WASM_SNAKE_INPUT_H

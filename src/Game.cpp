@@ -23,34 +23,77 @@
 
 #include "Game.h"
 #include "Graphics.h"
+#include "Input.h"
 
-Game::Game() {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    gameLoop();
-}
+namespace snake {
 
-Game::~Game() {
-    SDL_Quit();
-}
+    const Uint64 FPS = 10;
+    const Uint64 TARGET_FRAME_TIME_MS = 1000 / FPS;
+    const Uint64 MAX_FRAME_TIME_MS = 5000;
 
-void Game::gameLoop() {
-    Graphics graphics;
-    SDL_Event e;
-    bool quit = false;
+    Game::Game(): _input(), _graphics(), _player(), _level() {
+        SDL_Init(SDL_INIT_EVERYTHING);
+        gameLoop();
+    }
 
-    while (!quit) {
-        while (SDL_PollEvent(&e) != 0) {
-            if (e.type == SDL_QUIT) {
+    Game::~Game() {
+        SDL_Quit();
+    }
+
+    void Game::gameLoop() {
+        SDL_Event e;
+        bool quit = false;
+
+        Uint64 lastUpdateTimeMS = SDL_GetTicks64();
+
+        while (!quit) {
+            _input.beingNewFrame();
+
+            while (SDL_PollEvent(&e) != 0) {
+                switch (e.type) {
+                    case SDL_KEYDOWN:
+                        if (e.key.repeat == 0) {
+                            _input.keyDownEvent(e);
+                        }
+                        break;
+                    case SDL_QUIT:
+                        quit = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (_input.getPressedKey() == SDL_SCANCODE_ESCAPE) {
                 quit = true;
             }
+
+            Uint64 elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
+
+            update((double)std::min(elapsedTimeMS, MAX_FRAME_TIME_MS) / 1000.0);
+            draw();
+
+            elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
+            auto remainingTime = std::max((Uint64)0, TARGET_FRAME_TIME_MS - elapsedTimeMS);
+
+            if (remainingTime > 0) {
+                SDL_Delay(remainingTime);
+            }
+            lastUpdateTimeMS = SDL_GetTicks64();
         }
     }
-}
 
-void Game::draw(Graphics &graphics) {
+    void Game::draw() {
+        _graphics.clear();
 
-}
+        _level.draw(_graphics);
+        _player.draw(_graphics);
 
-void Game::update(float elapsedTime) {
+        _graphics.flip();
+    }
 
-}
+    void Game::update(double elapsedTimeS) {
+        _player.update(elapsedTimeS, _input);
+    }
+
+} // snake

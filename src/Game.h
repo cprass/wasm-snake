@@ -17,22 +17,33 @@
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "Graphics.h"
-
 #ifndef WASM_SNAKE_GAME_H
 #define WASM_SNAKE_GAME_H
 
+#include "Graphics.h"
+#include "Level.h"
+#include "Player.h"
+#include "Input.h"
 
-class Game {
-public:
-    Game();
-    ~Game();
+namespace snake {
 
-private:
-    void gameLoop();
-    void draw(Graphics &graphics);
-    void update(float elapsedTime);
-};
+    class Game {
+    public:
+        Game();
+        ~Game();
+
+    private:
+        void gameLoop();
+        void draw();
+        void update(double elapsedTimeS);
+
+        Level _level;
+        Player _player;
+        Graphics _graphics;
+        Input _input;
+    };
+
+} // snake
 
 
 #endif //WASM_SNAKE_GAME_H

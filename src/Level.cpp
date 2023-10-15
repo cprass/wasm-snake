@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023 Christian Praß
  * This file is part of wasm-snake.
@@ -15,27 +16,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
 
+#include "Level.h"
+#include "Globals.h"
 #include "SDL2/SDL.h"
 
 namespace snake {
+    Level::Level() =default;
+    Level::~Level() =default;
 
-    class Graphics {
-    public:
-        Graphics();
-        ~Graphics();
+    void Level::draw(Graphics &graphics) {
+        SDL_Renderer* renderer = graphics.getRenderer();
 
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
-    private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
-    };
-
+        // TODO: render food tiles
+    }
 } // snake
-
-#endif //WASM_SNAKE_GRAPHICS_H

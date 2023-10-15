@@ -16,13 +16,38 @@
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "Graphics.h"
+#include "Globals.h"
 
-Graphics::Graphics() {
-    SDL_CreateWindowAndRenderer(640, 640, 0, &window, &renderer);
-    SDL_SetWindowTitle(window, "wasm-snake");
-}
+namespace snake {
 
-Graphics::~Graphics() {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-}
+    Graphics::Graphics() {
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        SDL_CreateWindowAndRenderer(config::WIDTH , config::HEIGHT, 0, &window, &renderer);
+        SDL_SetWindowTitle(window, "wasm-snake");
+
+        _window = window;
+        _renderer = renderer;
+    }
+
+    Graphics::~Graphics() {
+        SDL_DestroyWindow(_window);
+        SDL_DestroyRenderer(_renderer);
+    }
+
+    void Graphics::flip() {
+        SDL_RenderPresent(_renderer);
+    }
+
+    void Graphics::clear() {
+        config::colors::BACKGROUND.activate(_renderer);
+        SDL_RenderClear(_renderer);
+    }
+
+    SDL_Renderer* Graphics::getRenderer() const {
+        return _renderer;
+    }
+
+
+
+} // snake

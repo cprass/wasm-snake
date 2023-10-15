@@ -15,27 +15,22 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
 
-#include "SDL2/SDL.h"
+#ifndef WASM_SNAKE_LEVEL_H
+#define WASM_SNAKE_LEVEL_H
+
+#include "Graphics.h"
 
 namespace snake {
 
-    class Graphics {
+    class Level {
     public:
-        Graphics();
-        ~Graphics();
+        Level();
+        ~Level();
 
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
-    private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
+        void draw(Graphics& graphics);
     };
 
 } // snake
 
-#endif //WASM_SNAKE_GRAPHICS_H
+#endif //WASM_SNAKE_LEVEL_H

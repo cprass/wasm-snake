@@ -15,27 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
 
+#include "Globals.h"
 #include "SDL2/SDL.h"
 
-namespace snake {
+namespace snake::config::colors {
 
-    class Graphics {
-    public:
-        Graphics();
-        ~Graphics();
+            Color::Color(Uint8 r, Uint8 g, Uint8 b, Uint8 a): r(r), g(g), b(b), a(a) {}
+            void Color::activate(SDL_Renderer *renderer) const {
+                SDL_SetRenderDrawColor(renderer, r, g, b, a);
+            }
 
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
-    private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
-    };
-
-} // snake
-
-#endif //WASM_SNAKE_GRAPHICS_H
+} // snake::config::colors

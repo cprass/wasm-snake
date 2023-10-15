@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2023 Christian Praß
  * This file is part of wasm-snake.
@@ -15,27 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
+
+#ifndef WASM_SNAKE_RECT_H
+#define WASM_SNAKE_RECT_H
 
 #include "SDL2/SDL.h"
+#include "Graphics.h"
 
 namespace snake {
 
-    class Graphics {
+    class Rect {
     public:
-        Graphics();
-        ~Graphics();
-
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
+        Rect(unsigned int x, unsigned int y);
+        ~Rect();
+        void draw(Graphics& graphics);
     private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
+        SDL_Rect _rect;
     };
 
 } // snake
 
-#endif //WASM_SNAKE_GRAPHICS_H
+#endif //WASM_SNAKE_RECT_H

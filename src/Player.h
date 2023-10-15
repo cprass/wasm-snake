@@ -15,27 +15,36 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef WASM_SNAKE_GRAPHICS_H
-#define WASM_SNAKE_GRAPHICS_H
 
-#include "SDL2/SDL.h"
+#ifndef WASM_SNAKE_PLAYER_H
+#define WASM_SNAKE_PLAYER_H
+
+#include <vector>
+
+#include "Graphics.h"
+#include "Globals.h"
+#include "Input.h"
+#include "Rect.h"
 
 namespace snake {
 
-    class Graphics {
+    class Player {
     public:
-        Graphics();
-        ~Graphics();
+        Player();
+        ~Player();
 
-        void flip();
-        void clear();
-        SDL_Renderer* getRenderer() const;
-
+        void draw(Graphics& graphics);
+        void update(double elapsedTimeS, Input &input);
     private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
+        std::pair<Uint32, Uint32> _head;
+        std::vector<Rect> _tail;
+        Direction _direction;
+
+        void _parseDirection(Input &input);
+        void _setDirection(Direction dir);
+        void _move();
     };
 
 } // snake
 
-#endif //WASM_SNAKE_GRAPHICS_H
+#endif //WASM_SNAKE_PLAYER_H

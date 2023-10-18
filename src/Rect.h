@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2023 Christian Praß
  * This file is part of wasm-snake.

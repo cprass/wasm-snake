@@ -23,7 +23,6 @@
 
 #include "Game.h"
 #include "Graphics.h"
-#include "Input.h"
 
 namespace snake {
 
@@ -66,20 +65,20 @@ namespace snake {
 
             if (_input.getPressedKey() == SDL_SCANCODE_ESCAPE) {
                 quit = true;
+            } else {
+                Uint64 elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
+                lastUpdateTimeMS = SDL_GetTicks64();
+
+                update((double)std::min(elapsedTimeMS, MAX_FRAME_TIME_MS) / 1000.0);
+                draw();
+
+                Uint64 currFrameElapsedTime = SDL_GetTicks64() - lastUpdateTimeMS;
+                auto remainingTime = std::max((Uint64)0, TARGET_FRAME_TIME_MS - currFrameElapsedTime);
+
+                if (remainingTime > 0) {
+                    SDL_Delay(remainingTime);
+                }
             }
-
-            Uint64 elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
-
-            update((double)std::min(elapsedTimeMS, MAX_FRAME_TIME_MS) / 1000.0);
-            draw();
-
-            elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
-            auto remainingTime = std::max((Uint64)0, TARGET_FRAME_TIME_MS - elapsedTimeMS);
-
-            if (remainingTime > 0) {
-                SDL_Delay(remainingTime);
-            }
-            lastUpdateTimeMS = SDL_GetTicks64();
         }
     }
 

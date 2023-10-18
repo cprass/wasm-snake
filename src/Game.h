@@ -23,6 +23,7 @@
 #include "Level.h"
 #include "Player.h"
 #include "Input.h"
+#include "Menu.h"
 
 namespace snake {
 
@@ -35,11 +36,16 @@ namespace snake {
         void gameLoop();
         void draw();
         void update(double elapsedTimeS);
+        void checkCollisions();
 
-        Level _level;
-        Player _player;
-        Graphics _graphics;
-        Input _input;
+        Level level;
+        Player player;
+        Graphics graphics;
+        Input input;
+        Menu menu;
+
+        bool isGameOver;
+        bool isMenuOpen;
     };
 
 } // snake

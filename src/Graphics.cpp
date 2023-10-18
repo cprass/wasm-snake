@@ -16,38 +16,52 @@
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
 #include "Graphics.h"
-#include "Globals.h"
 
 namespace snake {
 
     Graphics::Graphics() {
-        SDL_Window* window;
-        SDL_Renderer* renderer;
+        SDL_Init(SDL_INIT_EVERYTHING);
+        TTF_Init();
+
         SDL_CreateWindowAndRenderer(config::WIDTH , config::HEIGHT, 0, &window, &renderer);
         SDL_SetWindowTitle(window, "wasm-snake");
 
-        _window = window;
-        _renderer = renderer;
+
+        // TODO: find a better way to load fonts dynamically
+        font = TTF_OpenFont("/home/chris/fonts/snake-wasm/regular.ttf", 32);
+        if (font == nullptr) {
+            std::cout << "Could not load font: " << TTF_GetError() << std::endl;
+            exit(1);
+        }
     }
 
     Graphics::~Graphics() {
-        SDL_DestroyWindow(_window);
-        SDL_DestroyRenderer(_renderer);
+        SDL_DestroyWindow(window);
+        SDL_DestroyRenderer(renderer);
+        TTF_CloseFont(font);
+
+        SDL_Quit();
+        TTF_Quit();
     }
 
     void Graphics::flip() {
-        SDL_RenderPresent(_renderer);
+        SDL_RenderPresent(renderer);
     }
 
     void Graphics::clear() {
-        config::colors::BACKGROUND.activate(_renderer);
-        SDL_RenderClear(_renderer);
+        config::colors::BACKGROUND.activate(renderer);
+        SDL_RenderClear(renderer);
     }
 
     SDL_Renderer* Graphics::getRenderer() const {
-        return _renderer;
+        return renderer;
     }
 
-
+    SDL_Texture* Graphics::createTextTexture(const std::string& text) {
+        SDL_Surface* surfaceText = TTF_RenderText_Solid(font, text.c_str(), {255, 255, 255});
+        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surfaceText);
+        SDL_FreeSurface(surfaceText);
+        return texture;
+    }
 
 } // snake

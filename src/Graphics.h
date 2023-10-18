@@ -18,7 +18,11 @@
 #ifndef WASM_SNAKE_GRAPHICS_H
 #define WASM_SNAKE_GRAPHICS_H
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <iostream>
+
+#include "Globals.h"
 
 namespace snake {
 
@@ -30,10 +34,12 @@ namespace snake {
         void flip();
         void clear();
         SDL_Renderer* getRenderer() const;
+        SDL_Texture* createTextTexture(const std::string& text);
 
     private:
-        SDL_Window* _window;
-        SDL_Renderer* _renderer;
+        SDL_Window* window;
+        SDL_Renderer* renderer;
+        TTF_Font* font;
     };
 
 } // snake

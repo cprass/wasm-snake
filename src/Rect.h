@@ -19,7 +19,7 @@
 #ifndef WASM_SNAKE_RECT_H
 #define WASM_SNAKE_RECT_H
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 #include "Graphics.h"
 
 namespace snake {

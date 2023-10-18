@@ -16,25 +16,34 @@
  * along with wasm-snake. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "Rect.h"
+#ifndef WASM_SNAKE_MENU_H
+#define WASM_SNAKE_MENU_H
+
+#include "Input.h"
+#include "Graphics.h"
+
+#include <string>
+#include <array>
 
 namespace snake {
 
-    Rect::Rect(unsigned int x, unsigned int y) {
-        int size = config::TILE_SIZE;
-        _rect = SDL_Rect{
-            size * (int)x,
-            size * (int)y,
-            size,
-            size
-        };
+    class Menu {
+    public:
+        Menu(Graphics& graphics);
+        ~Menu();
+
+        bool getIsOpen();
+
+        void draw(Graphics& graphics);
+        void update(double elapsedTimeS, Input &input);
+    private:
+        bool isOpen;
+        SDL_Texture* headerTexture;
+        std::array<SDL_Texture *, 2> entryTextures;
     };
 
-    Rect::~Rect() =default;
 
-    void Rect::draw(Graphics &graphics) {
-        auto renderer = graphics.getRenderer();
-        SDL_RenderFillRect(renderer, &_rect);
-    };
+    #endif //WASM_SNAKE_MENU_H
 
 } // snake
+

@@ -1,6 +1,11 @@
 add_executable(snake "main.cpp")
+
+INCLUDE(FindPkgConfig)
+find_package(SDL2 REQUIRED)
+PKG_SEARCH_MODULE(SDL2TTF REQUIRED)
+
 target_sources(snake
-        PUBLIC
+        PRIVATE
             Globals.cpp
             Graphics.cpp
             Game.cpp
@@ -8,16 +13,10 @@ target_sources(snake
             Level.cpp
             Player.cpp
             Rect.cpp
-        PRIVATE
-            Globals.h
-            Graphics.h
-            Game.h
-            Input.h
-            Level.h
-            Player.h
-            Rect.h
+            Menu.cpp
 )
 
-find_package(SDL2 REQUIRED)
-target_include_directories(snake PUBLIC ${SDL2_INCLUDE_DIRS})
-target_link_libraries(snake ${SDL2_LIBRARIES})
+
+
+target_include_directories(snake PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIRS})
+target_link_libraries(snake PRIVATE ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARIES})

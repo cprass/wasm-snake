@@ -18,8 +18,6 @@
  */
 
 #include "Level.h"
-#include "Globals.h"
-#include "SDL2/SDL.h"
 
 namespace snake {
     Level::Level() =default;

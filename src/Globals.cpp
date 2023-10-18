@@ -17,7 +17,6 @@
  */
 
 #include "Globals.h"
-#include "SDL2/SDL.h"
 
 namespace snake::config::colors {
 

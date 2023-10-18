@@ -22,7 +22,6 @@
  */
 
 #include "Game.h"
-#include "Graphics.h"
 
 namespace snake {
 
@@ -30,14 +29,11 @@ namespace snake {
     const Uint64 TARGET_FRAME_TIME_MS = 1000 / FPS;
     const Uint64 MAX_FRAME_TIME_MS = 5000;
 
-    Game::Game(): _input(), _graphics(), _player(), _level() {
-        SDL_Init(SDL_INIT_EVERYTHING);
+    Game::Game(): input(), graphics(), player(), level(), menu(Menu(graphics)) {
         gameLoop();
     }
 
-    Game::~Game() {
-        SDL_Quit();
-    }
+    Game::~Game() =default;
 
     void Game::gameLoop() {
         SDL_Event e;
@@ -46,13 +42,13 @@ namespace snake {
         Uint64 lastUpdateTimeMS = SDL_GetTicks64();
 
         while (!quit) {
-            _input.beingNewFrame();
+            input.beingNewFrame();
 
             while (SDL_PollEvent(&e) != 0) {
                 switch (e.type) {
                     case SDL_KEYDOWN:
                         if (e.key.repeat == 0) {
-                            _input.keyDownEvent(e);
+                            input.keyDownEvent(e);
                         }
                         break;
                     case SDL_QUIT:
@@ -63,36 +59,58 @@ namespace snake {
                 }
             }
 
-            if (_input.getPressedKey() == SDL_SCANCODE_ESCAPE) {
-                quit = true;
-            } else {
-                Uint64 elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
-                lastUpdateTimeMS = SDL_GetTicks64();
+            switch (input.getPressedKey()) {
+                case SDL_SCANCODE_ESCAPE:
+                    if (!isMenuOpen) {
+                        isMenuOpen = true;
+                    } else if (!isGameOver) {
+                        isMenuOpen = false;
+                    }
+                default:
+                    break;
+            }
 
-                update((double)std::min(elapsedTimeMS, MAX_FRAME_TIME_MS) / 1000.0);
-                draw();
+            Uint64 elapsedTimeMS = SDL_GetTicks64() - lastUpdateTimeMS;
+            lastUpdateTimeMS = SDL_GetTicks64();
 
-                Uint64 currFrameElapsedTime = SDL_GetTicks64() - lastUpdateTimeMS;
-                auto remainingTime = std::max((Uint64)0, TARGET_FRAME_TIME_MS - currFrameElapsedTime);
+            update((double)std::min(elapsedTimeMS, MAX_FRAME_TIME_MS) / 1000.0);
+            checkCollisions();
+            draw();
 
-                if (remainingTime > 0) {
-                    SDL_Delay(remainingTime);
-                }
+            Uint64 currFrameElapsedTime = SDL_GetTicks64() - lastUpdateTimeMS;
+            auto remainingTime = std::max((Uint64)0, TARGET_FRAME_TIME_MS - currFrameElapsedTime);
+
+            if (remainingTime > 0) {
+                SDL_Delay(remainingTime);
             }
         }
     }
 
     void Game::draw() {
-        _graphics.clear();
+        graphics.clear();
 
-        _level.draw(_graphics);
-        _player.draw(_graphics);
+        level.draw(graphics);
+        player.draw(graphics);
 
-        _graphics.flip();
+        if (isMenuOpen) {
+            menu.draw(graphics);
+        }
+
+        graphics.flip();
     }
 
     void Game::update(double elapsedTimeS) {
-        _player.update(elapsedTimeS, _input);
+        if (isMenuOpen) {
+            menu.update(elapsedTimeS, input);
+        } else {
+            // update player and level only if the menu is not currently opened
+            player.update(elapsedTimeS, input);
+            // TODO: update level
+        }
+    }
+
+    void Game::checkCollisions() {
+
     }
 
 } // snake

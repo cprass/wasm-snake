@@ -36,13 +36,13 @@ namespace snake {
         void draw(Graphics& graphics);
         void update(double elapsedTimeS, Input &input);
     private:
-        std::pair<Uint32, Uint32> _head;
-        std::vector<Rect> _tail;
-        Direction _direction;
+        std::pair<Uint32, Uint32> head;
+        std::vector<Rect> tail;
+        Direction direction;
 
-        void _parseDirection(Input &input);
-        void _setDirection(Direction dir);
-        void _move();
+        void parseDirection(Input &input);
+        void setDirection(Direction dir);
+        void move();
     };
 
 } // snake

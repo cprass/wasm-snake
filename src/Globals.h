@@ -19,15 +19,15 @@
 #ifndef WASM_SNAKE_GLOBALS_H
 #define WASM_SNAKE_GLOBALS_H
 
-#include "SDL2/SDL.h"
+#include <SDL2/SDL.h>
 
 namespace snake {
     namespace config {
         const int TILE_SIZE = 20;
         const int BOARD_TILES_HORIZONTAL = 29;
         const int BOARD_TILES_VERTICAL = 29;
-        const int WIDTH = TILE_SIZE * BOARD_TILES_HORIZONTAL;
-        const int HEIGHT = TILE_SIZE * BOARD_TILES_VERTICAL;
+        const int WIDTH = TILE_SIZE * BOARD_TILES_HORIZONTAL; // 580
+        const int HEIGHT = TILE_SIZE * BOARD_TILES_VERTICAL; // 580
 
         namespace colors {
 
@@ -40,8 +40,10 @@ namespace snake {
             };
 
             const Color BACKGROUND(0,0,0,SDL_ALPHA_OPAQUE);
-            const Color PLAYER(0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
             const Color ENVIRONMENT(0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+            const Color PLAYER(0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+            const Color BORDER(0x88, 0x88, 0x88, SDL_ALPHA_OPAQUE);
+            const Color FONT(0xCC, 0xCC, 0xCC, SDL_ALPHA_OPAQUE);
         }
     }
 

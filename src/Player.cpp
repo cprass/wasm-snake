@@ -18,23 +18,18 @@
 
 #include "Player.h"
 
-#include "SDL2/SDL.h"
-
-#include "Globals.h"
-#include "Input.h"
-
 namespace snake {
 
     Player::Player() {
-        _head = {14, 14};
-        _tail = {
+        head = {14, 14};
+        tail = {
                 Rect{14, 15},
                 Rect{14, 16},
                 Rect{14, 17},
                 Rect{14, 18},
                 Rect{14, 19},
         };
-        _direction = Direction::Up;
+        direction = Direction::Up;
     };
 
     Player::~Player() =default;
@@ -44,60 +39,60 @@ namespace snake {
         config::colors::PLAYER.activate(renderer);
         int size = config::TILE_SIZE;
         SDL_Rect rect{
-            size * (int)_head.first,
-            size * (int)_head.second,
+            size * (int)head.first,
+            size * (int)head.second,
             size,
             size
         };
         SDL_RenderFillRect(renderer, &rect);
 
-        for (auto vec : _tail) {
+        for (auto vec : tail) {
             vec.draw(graphics);
         }
     }
 
-    void Player::_move() {
+    void Player::move() {
         // If tail exists, create a new tail part at the current head position
-        if (!_tail.empty()) {
-            _tail.insert(_tail.begin(), Rect{
-                _head.first,
-                _head.second,
+        if (!tail.empty()) {
+            tail.insert(tail.begin(), Rect{
+                head.first,
+                head.second,
             });
-            _tail.pop_back();
+            tail.pop_back();
         }
 
         // Set new head position
-        switch (_direction) {
+        switch (direction) {
             case Direction::Up:
-                _head.second = std::max((Uint32)0, _head.second - 1);
+                head.second = std::max((Uint32)0, head.second - 1);
                 break;
             case Direction::Down:
-                _head.second = std::min((Uint32)config::BOARD_TILES_VERTICAL, _head.second + 1);
+                head.second = std::min((Uint32)config::BOARD_TILES_VERTICAL, head.second + 1);
                 break;
             case Direction::Left:
-                _head.first = std::max((Uint32)0, _head.first - 1);
+                head.first = std::max((Uint32)0, head.first - 1);
                 break;
             case Direction::Right:
-                _head.first = std::min((Uint32)config::BOARD_TILES_HORIZONTAL, _head.first + 1);
+                head.first = std::min((Uint32)config::BOARD_TILES_HORIZONTAL, head.first + 1);
                 break;
             default:
                 break;
         }
     }
 
-    void Player::_parseDirection(Input &input) {
+    void Player::parseDirection(Input &input) {
         switch (input.getPressedKey()) {
             case SDL_SCANCODE_UP:
-                _setDirection(Direction::Up);
+                setDirection(Direction::Up);
                 break;
             case SDL_SCANCODE_DOWN:
-                _setDirection(Direction::Down);
+                setDirection(Direction::Down);
                 break;
             case SDL_SCANCODE_LEFT:
-                _setDirection(Direction::Left);
+                setDirection(Direction::Left);
                 break;
             case SDL_SCANCODE_RIGHT:
-                _setDirection(Direction::Right);
+                setDirection(Direction::Right);
                 break;
             default:
                 break;
@@ -105,14 +100,27 @@ namespace snake {
     }
 
     void Player::update(double elapsedTimeS, Input &input) {
-        _parseDirection(input);
-        _move();
+        parseDirection(input);
+        // Player always moves on each update
+        move();
     }
 
-    void Player::_setDirection(Direction dir) {
-        // TODO: only allow direction that is not moving towards the first tail piece
+    void Player::setDirection(Direction dir) {
+        // Simply ignore the movement if it is the opposite of the current direction
+        if (dir == Direction::Up && direction == Direction::Down) {
+            return;
+        }
+        if (dir == Direction::Down && direction == Direction::Up) {
+            return;
+        }
+        if (dir == Direction::Left && direction == Direction::Right) {
+            return;
+        }
+        if (dir == Direction::Right && direction == Direction::Left) {
+            return;
+        }
 
-        _direction = dir;
+        direction = dir;
     }
 
 } // snake
